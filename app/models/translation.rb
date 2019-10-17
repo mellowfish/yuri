@@ -1,6 +1,17 @@
 class Translation
   include ActiveModel::Model
 
+  MAPPINGS = {
+    ruby: {
+      js: {
+        /^puts[ \(]"(?<string>[^"]+?)"[\)]?$/ => {
+          code: "console.log('%<string>s');",
+          keys: %w(string)
+        }
+      }
+    }
+  }.freeze
+
   attr_accessor :input_code, :input_language, :output_language
 
   def output_code
@@ -9,15 +20,12 @@ class Translation
     end.join("\n")
   end
 
-  MAPPINGS = {
-    /^puts[ \(]"(?<string>[^"]+?)"[\)]?$/ => {
-      code: "console.log('%<string>s');",
-      keys: %w(string)
-    }
-  }.freeze
+  def mappings
+    MAPPINGS.fetch(input_language.to_sym, {}).fetch(output_language.to_sym, {})
+  end
 
   def translate_line(line)
-    MAPPINGS.each do |regex, mapping_data|
+    mappings.each do |regex, mapping_data|
       regex.match(line) do |match_data|
         return format(mapping_data[:code], match_data.named_captures.slice(*mapping_data[:keys]).symbolize_keys)
       end
