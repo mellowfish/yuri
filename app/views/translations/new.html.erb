@@ -2,11 +2,11 @@
     <table>
         <tr class="row1">
             <th>
-                <%= select_tag(:source_language, options_for_select([["Ruby", "ruby"], ["Javascript", 'javascript']])) %>
+                <%= select_tag(:input_language, options_for_select([["Ruby", "ruby"], ["Javascript", 'javascript']])) %>
             </th>
             <th></th>
             <th>
-                <%= select_tag(:destination_language, options_for_select([["Javascript", 'javascript'], ["Ruby", "ruby"]])) %>
+                <%= select_tag(:output_language, options_for_select([["Javascript", 'javascript'], ["Ruby", "ruby"]])) %>
             </th>
         </tr>
         <tr class="row2">
