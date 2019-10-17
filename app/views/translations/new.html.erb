@@ -2,11 +2,11 @@
     <table>
         <tr class="row1">
             <th>
-                <%= select_tag(:input_language, options_for_select([["Ruby", "ruby"], ["Javascript", 'javascript']])) %>
+                <%= form.select(:input_language, [["Ruby", "ruby"], ["Javascript", 'js']]) %>
             </th>
             <th></th>
             <th>
-                <%= select_tag(:output_language, options_for_select([["Javascript", 'javascript'], ["Ruby", "ruby"]])) %>
+                <%= form.select(:output_language, [["Javascript", "js"], ["Ruby", "ruby"]]) %>
             </th>
         </tr>
         <tr class="row2">
