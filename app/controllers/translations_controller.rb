@@ -2,6 +2,7 @@ class TranslationsController < ApplicationController
   helper_method :translation
 
   def new; end
+
   def create
     render :new
   end
