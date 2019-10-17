@@ -17,7 +17,7 @@ class Translation
             code: "console.log(%<expression>s)",
             keys: %w(expression)
           },
-          /puts[(](?<expression>.+)[)]?/ => {
+          /puts[(](?<expression>.+?)[)]/ => {
             code: "console.log(%<expression>s)",
             keys: %w(expression)
           },
@@ -45,7 +45,7 @@ class Translation
             code: "\"%<string>s\"",
             keys: %w(string)
           },
-          /^(?<expression>.+?)[.]reduce\(\((?<a>\w+), (?<b>\w+)\) => \k<a> [+] \k<b>\)$/ => {
+          /(?<expression>.+?)[.]reduce[(][(](?<a>\w+), (?<b>\w+)[)] => \k<a> [+] \k<b>[)]/ => {
             code: "%<expression>s.sum",
             keys: %w(variable_name expression)
           },
