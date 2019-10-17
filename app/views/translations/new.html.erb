@@ -1,0 +1,5 @@
+<%= form_for(translation) do |form| %>
+  <%= form.text_area :input_code %>
+  <%= form.submit("Translate") %>
+<% end %>
+<textarea><%= translation.output_code %></textarea>
