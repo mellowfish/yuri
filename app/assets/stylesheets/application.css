@@ -13,3 +13,49 @@
  *= require_tree .
  *= require_self
  */
+
+.input {
+  justify-content: flex-start;
+}
+
+table {
+  width: 100%;
+}
+
+.col1 {
+  width: 45%;
+  padding: 1rem;
+}
+
+.col2 {
+  justify-content: center;
+}
+
+.submit {
+  justify-content: center;
+}
+
+.col3 {
+  width: 45%;
+  padding: 1rem;
+}
+textarea{
+  height: 200px;
+  width: 100%;
+}
+
+.ruby_output_1 {
+  justify-content: flex-start;
+}
+
+.button {
+
+}
+
+.js_output_1 {
+  justify-content: flex-end;
+}
+
+.js_output_2 {
+  justify-content: flex-end;
+}
