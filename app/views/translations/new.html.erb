@@ -2,33 +2,33 @@
     <table>
         <tr class="row1">
             <th>
-                <%= form.select(:input_language, [["Ruby", "ruby"], ["Javascript", 'js']]) %>
+                <%= form.select(:source_language, [["Ruby", "ruby"], ["Javascript", 'js']]) %>
             </th>
             <th></th>
             <th>
-                <%= form.select(:output_language, [["Javascript", "js"], ["Ruby", "ruby"]]) %>
+                <%= form.select(:destination_language, [["Javascript", "js"], ["Ruby", "ruby"]]) %>
             </th>
         </tr>
         <tr class="row2">
             <td class="input col1">
-                <%= form.text_area(:input_code, placeholder: "your code goes here") %>
+                <%= form.text_area(:source_code, placeholder: "your code goes here") %>
             </td>
             <td class="button col2">
                 <%= form.submit("Translate", class: "submit") %>
             </td>
             <td class="col3">
                 <div class="js_output_1">
-                    <%= translation.output_code %>
+                    <%= translation.destination_code %>
                 </div>
             </td>
         </tr>
         <tr class="row3">
             <td class="ruby_output_1 col1">
-                <%= "ruby output" %>
+                <%= translation.source_output %>
             </td>
             <td class="col2"></td>
             <td class="js_output_2 col3">
-                <%= "js output 2" %>
+                <%= translation.destination_output %>
             </td>
         </tr>
     </table>

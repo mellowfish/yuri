@@ -13,7 +13,7 @@ private
   end
 
   def translation_params_with_defaults
-    { input_language: input_language, output_language: output_language }.merge(translation_params)
+    { source_language: source_language, destination_language: destination_language }.merge(translation_params)
   end
 
   def translation_params
@@ -21,16 +21,16 @@ private
 
     params
       .require(:translation)
-      .permit(:input_code, :input_language, :output_language)
+      .permit(:source_code, :source_language, :destination_language)
       .to_h
       .symbolize_keys
   end
 
-  def input_language
-    translation_params[:input_language] || "ruby"
+  def source_language
+    translation_params[:source_language] || "ruby"
   end
 
-  def output_language
-    translation_params[:output_language] || "js"
+  def destination_language
+    translation_params[:destination_language] || "js"
   end
 end

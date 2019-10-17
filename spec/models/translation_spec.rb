@@ -31,20 +31,20 @@ RSpec.describe Translation do
 
   subject do
     described_class.new(
-      input_language: input_language,
-      input_code: input_code,
-      output_language: output_language
+      source_language: source_language,
+      source_code: source_code,
+      destination_language: destination_language
     )
   end
 
   describe "output_code" do
     context "from ruby to js" do
-      let(:input_language) { "ruby" }
-      let(:output_language) { "js" }
+      let(:source_language) { "ruby" }
+      let(:destination_language) { "js" }
 
       TEST_CASES.each do |test_data|
         context "given: #{test_data[:ruby]}" do
-          let(:input_code) { test_data[:ruby] }
+          let(:source_code) { test_data[:ruby] }
           let(:output_code) { test_data[:js] }
 
           it "returns: #{test_data[:js]}" do
@@ -55,12 +55,12 @@ RSpec.describe Translation do
     end
 
     context "from js to ruby" do
-      let(:input_language) { "js" }
-      let(:output_language) { "ruby" }
+      let(:source_language) { "js" }
+      let(:destination_language) { "ruby" }
 
       TEST_CASES.each do |test_data|
         context "given: #{test_data[:js]}" do
-          let(:input_code) { test_data[:js] }
+          let(:source_code) { test_data[:js] }
           let(:output_code) { test_data[:ruby] }
 
           it "returns: #{test_data[:ruby]}" do

@@ -72,16 +72,45 @@ class Translation
     }
   }.freeze
 
-  attr_accessor :input_code, :input_language, :output_language
+  attr_accessor :source_code, :source_language, :destination_language
 
-  def output_code
-    input_code.to_s.split("\n").map do |input_line|
+  def destination_code
+    source_code.to_s.split("\n").map do |input_line|
       translate_line(input_line.strip)
     end.join("\n")
   end
 
+  def source_output
+    get_output(source_language, source_code)
+  end
+
+  def destination_output
+    get_output(destination_language, destination_code)
+  end
+
+private
+
+  def get_output(language, code)
+    file = Tempfile.new('code.txt')
+    file.write(code)
+    file.close
+
+    `#{code_runner(language)} #{file.path}`.gsub("\n", "<br>").html_safe
+  ensure
+    file.unlink
+  end
+
+  def code_runner(lang)
+    case lang
+    when "ruby"
+      "ruby"
+    when "js"
+      "node"
+    end
+  end
+
   def mappings
-    MAPPINGS.fetch(input_language.to_sym, {}).fetch(output_language.to_sym, {})
+    MAPPINGS.fetch(source_language.to_sym, {}).fetch(destination_language.to_sym, {})
   end
 
   def expression_mappings
@@ -108,7 +137,7 @@ class Translation
 
     return "" if line.blank?
 
-    if output_language == "js"
+    if destination_language == "js"
       if line[-1] == ";"
         line
       else
