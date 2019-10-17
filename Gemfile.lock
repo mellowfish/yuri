@@ -56,13 +56,21 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.1, >= 2.1.8)
+    better_errors (2.5.1)
+      coderay (>= 1.0.0)
+      erubi (>= 1.0.0)
+      rack (>= 0.9.0)
     bindex (0.8.1)
+    binding_of_caller (0.8.0)
+      debug_inspector (>= 0.0.1)
     bootsnap (1.4.5)
       msgpack (~> 1.0)
     builder (3.2.3)
     byebug (11.0.1)
+    coderay (1.1.2)
     concurrent-ruby (1.1.5)
     crass (1.0.5)
+    debug_inspector (0.0.3)
     erubi (1.9.0)
     ffi (1.11.1)
     globalid (0.4.2)
@@ -91,6 +99,9 @@ GEM
     nio4r (2.5.2)
     nokogiri (1.10.4)
       mini_portile2 (~> 2.4.0)
+    pry (0.12.2)
+      coderay (~> 1.1.0)
+      method_source (~> 0.9.0)
     puma (3.12.1)
     rack (2.0.7)
     rack-proxy (0.6.5)
@@ -169,10 +180,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  better_errors
+  binding_of_caller
   bootsnap (>= 1.4.2)
   byebug
   jbuilder (~> 2.7)
   listen (>= 3.0.5, < 3.2)
+  pry
   puma (~> 3.11)
   rails (~> 6.0.0)
   sass-rails (~> 5)

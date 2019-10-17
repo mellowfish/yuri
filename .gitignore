@@ -16,7 +16,8 @@
 
 /node_modules
 /vendor/**
-/lib/*
+/log/*
+
 
 ## Documentation cache and generated files:
 /.yardoc/
