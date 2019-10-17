@@ -95,7 +95,10 @@ private
     file.write(code)
     file.close
 
-    `#{code_runner(language)} #{file.path}`.gsub("\n", "<br>").html_safe
+    execution_result = `#{code_runner(language)} #{file.path}`.gsub("\n", "<br>").html_safe
+
+    return execution_result if $? == 0
+    "Are you sure you know #{language}? git good n00b"
   ensure
     file.unlink
   end
