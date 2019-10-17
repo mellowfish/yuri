@@ -9,16 +9,28 @@ class Translation
             code: "'%<string>s'",
             keys: %w(string)
           },
-          /^(?<expression>.+?)[.]sum$/ => {
-            code: "%<expression>s.reduce((a, b) => a + b);",
-            keys: %w(variable_name expression)
+          /(?<expression>.+?)[.]sum/ => {
+            code: "%<expression>s.reduce((a, b) => a + b)",
+            keys: %w(expression)
           },
-        },
-        lines: {
-          /^puts[ (](?<expression>.+)[)]?$/ => {
+          /puts[ ](?<expression>.+)/ => {
             code: "console.log(%<expression>s)",
             keys: %w(expression)
           },
+          /puts[(](?<expression>.+)[)]?/ => {
+            code: "console.log(%<expression>s)",
+            keys: %w(expression)
+          },
+          /(?<expression>.+?)[.]each { [|](?<block_argument>\w+)[|] (?<block_expression>.+?)[ ;]? }/ => {
+            code: "%<expression>s.forEach((%<block_argument>s) => %<block_expression>s)",
+            keys: %w(expression block_argument block_expression)
+          },
+          /(?<expression>.+?)[.]map { [|](?<block_argument>\w+)[|] (?<block_expression>.+?)[ ;]? }/ => {
+            code: "%<expression>s.map((%<block_argument>s) => %<block_expression>s)",
+            keys: %w(expression block_argument block_expression)
+          },
+        },
+        lines: {
           /^(?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
             code: "var %<variable_name>s = %<expression>s",
             keys: %w(variable_name expression)
@@ -33,16 +45,24 @@ class Translation
             code: "\"%<string>s\"",
             keys: %w(string)
           },
-          /^(?<expression>.+?)[.]reduce\(\(a, b\) => a [+] b\)$/ => {
+          /^(?<expression>.+?)[.]reduce\(\((?<a>\w+), (?<b>\w+)\) => \k<a> [+] \k<b>\)$/ => {
             code: "%<expression>s.sum",
             keys: %w(variable_name expression)
           },
-        },
-        lines: {
-          /^console[.]log[(](?<expression>.+?)[)]?$/ => {
+          /console[.]log[(](?<expression>.+?)[)]/ => {
             code: "puts %<expression>s",
             keys: %w(expression)
           },
+          /(?<expression>.+?)[.]forEach[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+?)[)]/ => {
+            code: "%<expression>s.each { |%<block_argument>s| %<block_expression>s }",
+            keys: %w(expression block_argument block_expression)
+          },
+          /(?<expression>.+?)[.]map[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+?)[)]/ => {
+            code: "%<expression>s.map { |%<block_argument>s| %<block_expression>s }",
+            keys: %w(expression block_argument block_expression)
+          },
+        },
+        lines: {
           /^var (?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
             code: "%<variable_name>s = %<expression>s",
             keys: %w(variable_name expression)
