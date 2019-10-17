@@ -14,3 +14,22 @@ require("channels")
 //
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
+
+window.handle_language_change = function(event) {
+  var source_language_select = this.document.querySelector("#translation_source_language");
+  var destination_language_select = this.document.querySelector("#translation_destination_language");
+
+  this.console.log(source_language_select.value);
+
+  if (source_language_select.value == "ruby") {
+    destination_language_select.value = "js";
+  } else {
+    destination_language_select.value = "ruby";
+  }
+
+  this.document.querySelector("#translation_source_code").value = ""
+  this.document.querySelector("#translation_destination_code").innerHTML = ""
+
+  this.document.querySelector("#translation_source_output").innerHTML = ""
+  this.document.querySelector("#translation_destination_output").innerHTML = ""
+}

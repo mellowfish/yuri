@@ -2,7 +2,12 @@
     <table>
         <tr class="row1">
             <th>
-                <%= form.select(:source_language, [["Ruby", "ruby"], ["Javascript", 'js']]) %>
+                <%= form.select(
+                    :source_language, 
+                    [["Ruby", "ruby"], ["Javascript", 'js']], 
+                    {}, 
+                    onChange: "window.handle_language_change();") 
+                    %>
             </th>
             <th></th>
             <th>
@@ -17,17 +22,17 @@
                 <%= form.submit("Translate", class: "submit") %>
             </td>
             <td class="col3">
-                <div class="js_output_1">
+                <div id="translation_destination_code" class="js_output_1">
                     <%= translation.destination_code %>
                 </div>
             </td>
         </tr>
         <tr class="row3">
-            <td class="ruby_output_1 col1">
+            <td id="translation_source_output" class="ruby_output_1 col1">
                 <%= translation.source_output %>
             </td>
             <td class="col2"></td>
-            <td class="js_output_2 col3">
+            <td id="translation_destination_output" class="js_output_2 col3">
                 <%= translation.destination_output %>
             </td>
         </tr>
