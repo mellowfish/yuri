@@ -89,7 +89,7 @@ class Translation
     return "" if line.blank?
 
     if output_language == "js"
-      if line.last == ";"
+      if line[-1] == ";"
         line
       else
         "#{line};"
