@@ -5,12 +5,12 @@ class Translation
 
   def output_code
     input_code.to_s.split("\n").map do |input_line|
-      translate_line(input_line)
+      translate_line(input_line.strip)
     end.join("\n")
   end
 
   MAPPINGS = {
-    /puts "(?<string>[^"]+?)"/ => {
+    /^puts[ \(]"(?<string>[^"]+?)"[\)]?$/ => {
       code: "console.log('%<string>s');",
       keys: %w(string)
     }
@@ -22,5 +22,7 @@ class Translation
         return format(mapping_data[:code], match_data.named_captures.slice(*mapping_data[:keys]).symbolize_keys)
       end
     end
+
+    line
   end
 end
