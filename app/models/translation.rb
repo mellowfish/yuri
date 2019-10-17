@@ -9,20 +9,18 @@ class Translation
             code: "'%<string>s'",
             keys: %w(string)
           },
+          /^(?<expression>.+?)[.]sum$/ => {
+            code: "%<expression>s.reduce((a, b) => a + b);",
+            keys: %w(variable_name expression)
+          },
         },
         lines: {
-          /^puts[ \(](?<expression>.+?)[\)]?$/ => {
+          /^puts[ (](?<expression>.+)[)]?$/ => {
             code: "console.log(%<expression>s)",
             keys: %w(expression)
           },
-          /^(?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+?)$/ => {
+          /^(?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
             code: "var %<variable_name>s = %<expression>s",
-            keys: %w(variable_name expression)
-          },
-          /^(?<expression>.+?)\.sum$/ => {
-            code: <<~JS.chomp,
-              %<expression>s.reduce((a, b) => a + b);
-            JS
             keys: %w(variable_name expression)
           },
         },
@@ -30,7 +28,26 @@ class Translation
     },
     js: {
       ruby: {
-        # TODO
+        expressions: {
+          /'(?<string>[^']+?)'/ => {
+            code: "\"%<string>s\"",
+            keys: %w(string)
+          },
+          /^(?<expression>.+?)[.]reduce\(\(a, b\) => a [+] b\)$/ => {
+            code: "%<expression>s.sum",
+            keys: %w(variable_name expression)
+          },
+        },
+        lines: {
+          /^console[.]log[(](?<expression>.+?)[)]?$/ => {
+            code: "puts %<expression>s",
+            keys: %w(expression)
+          },
+          /^var (?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
+            code: "%<variable_name>s = %<expression>s",
+            keys: %w(variable_name expression)
+          },
+        }
       }
     }
   }.freeze
@@ -56,6 +73,7 @@ class Translation
   end
 
   def translate_line(line)
+    line = line[0..-2] if line[-1] == ";"
     expression_mappings.each do |regex, mapping_data|
       regex.match(line) do |match_data|
         line[regex] = format(mapping_data[:code], match_data.named_captures.slice(*mapping_data[:keys]).symbolize_keys)
@@ -68,12 +86,16 @@ class Translation
       end
     end
 
-    if line.blank?
-      ""
-    elsif line.last == ";"
-      line
+    return "" if line.blank?
+
+    if output_language == "js"
+      if line.last == ";"
+        line
+      else
+        "#{line};"
+      end
     else
-      "#{line};"
+      line
     end
   end
 end

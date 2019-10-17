@@ -27,10 +27,10 @@ private
   end
 
   def input_language
-    translation_params[:input_language] || "ruby"
+    translation_params[:input_language] || "js"
   end
 
   def output_language
-    translation_params[:output_language] || "js"
+    translation_params[:output_language] || "ruby"
   end
 end
