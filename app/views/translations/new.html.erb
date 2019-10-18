@@ -1,40 +1,25 @@
 <%= form_for(translation) do |form| %>
-    <table>
-        <tr class="row1">
-            <th>
-                <%= form.select(
-                    :source_language, 
-                    [["Ruby", "ruby"], ["Javascript", 'js']], 
-                    {}, 
-                    onChange: "window.handle_language_change();") 
-                    %>
-            </th>
-            <th></th>
-            <th>
-                <%= form.select(:destination_language, [["Javascript", "js"], ["Ruby", "ruby"]]) %>
-            </th>
-        </tr>
-        <tr class="row2">
-            <td class="input col1">
-                <%= form.text_area(:source_code, placeholder: "your code goes here") %>
-            </td>
-            <td class="button col2">
-                <%= form.submit("Translate", class: "submit") %>
-            </td>
-            <td class="col3">
-                <div id="translation_destination_code" class="js_output_1">
-                    <%= translation.destination_code %>
-                </div>
-            </td>
-        </tr>
-        <tr class="row3">
-            <td id="translation_source_output" class="ruby_output_1 col1">
-                <%= translation.source_output %>
-            </td>
-            <td class="col2"></td>
-            <td id="translation_destination_output" class="js_output_2 col3">
-                <%= translation.destination_output %>
-            </td>
-        </tr>
-    </table>
-    <% end %>
+    <div class="grid-container">
+        <div class="source_language">
+            <%= form.select( :source_language, [["Ruby", "ruby"], ["Javascript", 'js']], {}, onChange: "window.handle_language_change();") %>
+        </div>
+        <div class="destination_language">
+            <%= form.select(:destination_language, [["Javascript", "js"], ["Ruby", "ruby"]]) %>
+        </div>
+        <div class="source_code">
+            <%= form.text_area(:source_code, placeholder: "your code goes here") %>
+        </div>
+        <div class="translate">
+            <%= form.submit("Translate", class: "submit") %>
+        </div>
+        <div class="destination_code">
+            <%= translation.destination_code %>
+        </div>
+        <div class="source_output">
+            <%= translation.source_output %>
+        </div>
+        <div class="destination_output">
+            <%= translation.destination_output %>
+        </div>
+    </div>
+<% end %>
