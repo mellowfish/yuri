@@ -74,6 +74,10 @@ class Translation
             code: "sum(%<expression>s)",
             keys: %w(expression)
           },
+          /(?<expression>.+?)[.]each[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
+            code: "for %<block_argument>s in %<expression>s:\n  %<block_expression>s",
+            keys: %w(expression block_argument block_expression)
+          },
         }
       }
     },
@@ -194,7 +198,7 @@ class Translation
   end
 
   def formatted_destination_code
-    destination_code.gsub("\n", "<br>").html_safe
+    destination_code.gsub("\n", "<br>").gsub(" ", "&nbsp;").html_safe
   end
 
   def destination_output
