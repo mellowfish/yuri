@@ -28,8 +28,8 @@ window.handle_language_change = function(event) {
   }
 
   this.document.querySelector("#translation_source_code").value = ""
-  this.document.querySelector("#translation_destination_code").innerHTML = ""
+  this.document.querySelector(".destination_code").innerHTML = ""
 
-  this.document.querySelector("#translation_source_output").innerHTML = ""
-  this.document.querySelector("#translation_destination_output").innerHTML = ""
+  this.document.querySelector(".source_output").innerHTML = ""
+  this.document.querySelector(".destination_output").innerHTML = ""
 }

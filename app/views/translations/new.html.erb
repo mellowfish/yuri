@@ -1,10 +1,10 @@
 <%= form_for(translation) do |form| %>
     <div class="grid-container">
         <div class="source_language">
-            <%= form.select( :source_language, [["Ruby", "ruby"], ["Javascript", 'js']], {}, onChange: "window.handle_language_change();") %>
+            <%= form.select( :source_language, [["Ruby", "ruby"], ["Javascript", 'js'], ["Python 3", "python3"]], {}, onChange: "window.handle_language_change();") %>
         </div>
         <div class="destination_language">
-            <%= form.select(:destination_language, [["Javascript", "js"], ["Ruby", "ruby"]]) %>
+            <%= form.select(:destination_language, [["Javascript", "js"], ["Python 3", "python3"], ["Ruby", "ruby"]]) %>
         </div>
         <div class="source_code">
             <%= form.text_area(:source_code, placeholder: "your code goes here") %>

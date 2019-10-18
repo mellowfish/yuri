@@ -36,7 +36,19 @@ class Translation
             keys: %w(variable_name expression)
           },
         },
+      },
+    python: {
+      expressions: {
+          /puts[ ](?<expression>.+)/ => {
+            code: "print(%<expression>s)",
+            keys: %w(expression)
+          },
+          /puts[(](?<expression>.+?)[)]/ => {
+            code: "print(%<expression>s)",
+            keys: %w(expression)
+          },
       }
+    }
     },
     js: {
       ruby: {
@@ -109,6 +121,8 @@ private
       "ruby"
     when "js"
       "node"
+    when "python3"
+      "python"
     end
   end
 
