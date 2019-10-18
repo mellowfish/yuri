@@ -28,17 +28,17 @@ class Translation
           /(?<expression>.+?)[.]map { [|](?<block_argument>\w+)[|] (?<block_expression>.+?)[ ;]? }/ => {
             code: "%<expression>s.map((%<block_argument>s) => %<block_expression>s)",
             keys: %w(expression block_argument block_expression)
-          },
+          }
         },
         lines: {
           /^(?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
             code: "var %<variable_name>s = %<expression>s",
             keys: %w(variable_name expression)
-          },
-        },
+          }
+        }
       },
-    python: {
-      expressions: {
+      python3: {
+        expressions: {
           /puts[ ](?<expression>.+)/ => {
             code: "print(%<expression>s)",
             keys: %w(expression)
@@ -46,9 +46,9 @@ class Translation
           /puts[(](?<expression>.+?)[)]/ => {
             code: "print(%<expression>s)",
             keys: %w(expression)
-          },
+          }
+        }
       }
-    }
     },
     js: {
       ruby: {
@@ -72,13 +72,13 @@ class Translation
           /(?<expression>.+?)[.]map[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+?)[)]/ => {
             code: "%<expression>s.map { |%<block_argument>s| %<block_expression>s }",
             keys: %w(expression block_argument block_expression)
-          },
+          }
         },
         lines: {
           /^var (?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
             code: "%<variable_name>s = %<expression>s",
             keys: %w(variable_name expression)
-          },
+          }
         }
       }
     }
@@ -103,13 +103,14 @@ class Translation
 private
 
   def get_output(language, code)
-    file = Tempfile.new('code.txt')
+    file = Tempfile.new("code.txt")
     file.write(code)
     file.close
 
     execution_result = `#{code_runner(language)} #{file.path}`.gsub("\n", "<br>").html_safe
 
-    return execution_result if $? == 0
+    return execution_result if $CHILD_STATUS == 0
+
     "Are you sure you know #{language}? git good n00b"
   ensure
     file.unlink
