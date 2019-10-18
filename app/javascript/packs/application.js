@@ -15,11 +15,9 @@ require("channels")
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
 
-window.handle_language_change = function(event) {
+window.handle_source_language_change = function(event) {
   var source_language_select = this.document.querySelector("#translation_source_language");
   var destination_language_select = this.document.querySelector("#translation_destination_language");
-
-  this.console.log(source_language_select.value);
 
   if (source_language_select.value == "ruby") {
     destination_language_select.value = "js";
@@ -31,5 +29,12 @@ window.handle_language_change = function(event) {
   this.document.querySelector(".destination_code").innerHTML = ""
 
   this.document.querySelector(".source_output").innerHTML = ""
+  this.document.querySelector(".destination_output").innerHTML = ""
+}
+
+window.handle_destination_language_change = function(event) {
+  var destination_language_select = this.document.querySelector("#translation_destination_language");
+
+  this.document.querySelector(".destination_code").innerHTML = ""
   this.document.querySelector(".destination_output").innerHTML = ""
 }
