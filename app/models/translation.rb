@@ -74,12 +74,16 @@ class Translation
             code: "sum(%<expression>s)",
             keys: %w(expression)
           },
+          /[(](?<range_start>\d+)[.][.](?<range_end>\d+)[)][.]each[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
+            code: "for %<block_argument>s in range(%<range_start>s, %<range_end>s + 1):\n  %<block_expression>s",
+            keys: %w(range_start range_end block_argument block_expression)
+          },
           /(?<expression>.+?)[.]each[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
             code: "for %<block_argument>s in %<expression>s:\n  %<block_expression>s",
             keys: %w(expression block_argument block_expression)
           },
-          /\[(?<expression>.+?)[.]map[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
-            code: "[%<block_expression>s for %<block_argument>s in [%<expression>s]",
+          /(?<expression>.+?)[.]map[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
+            code: "[%<block_expression>s for %<block_argument>s in %<expression>s]",
             keys: %w(expression block_argument block_expression)
           }
         }
@@ -96,18 +100,18 @@ class Translation
             code: "%<expression>s.sum",
             keys: %w(variable_name expression)
           },
-          /console[.]log[(](?<expression>.+?)[)]/ => {
-            code: "puts %<expression>s",
+          /console[.]log[(](?<expression>.+[(].+?[)]|.+?)[)]/ => {
+            code: "puts(%<expression>s)",
             keys: %w(expression)
           },
-          /(?<expression>.+?)[.]forEach[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+?)[)]/ => {
+          /(?<expression>.+?)[.]forEach[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+[(].+?[)]|.+?)[)]/ => {
             code: "%<expression>s.each { |%<block_argument>s| %<block_expression>s }",
             keys: %w(expression block_argument block_expression)
           },
-          /(?<expression>.+?)[.]map[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+?)[)]/ => {
+          /(?<expression>.+?)[.]map[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+[(].+?[)]|.+?)[)]/ => {
             code: "%<expression>s.map { |%<block_argument>s| %<block_expression>s }",
             keys: %w(expression block_argument block_expression)
-          }
+          },
         },
         lines: {
           /^var (?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
@@ -124,7 +128,7 @@ class Translation
             code: "nil",
             keys: %w(expression)
           },
-          /sum(?<expression>.+)/ => {
+          /sum[(](?<expression>.+)[)]/ => {
             code: "%<expression>s.sum",
             keys: %w(expression)
           },
@@ -134,15 +138,19 @@ class Translation
             keys: %w(expression)
           },
           /print\((?<expression>.+?)\)/ => {
-            code: "puts\(%<expression>s\)",
+            code: "puts(%<expression>s)",
             keys: %w(expression)
           },
+          /for[ ](?<block_argument>\w+)[ ]in[ ](?<expression>[^:]+?):\s+(?<block_expression>.+)/ => {
+            code: "%<expression>s.each { |%<block_argument>s| %<block_expression>s }",
+            keys: %w(expression block_argument block_expression)
+          },
           /\[(?<block_expression>.+?) for (?<block_argument>\w+) in range\((?<range_start>\d+),[ ](?<range_end>\d+)\)\]/ => {
-            code: "\(%<range_start>s...%<range_end>s\).each { |%<block_argument>s| %<block_expression>s }",
+            code: "(%<range_start>s...%<range_end>s).each { |%<block_argument>s| %<block_expression>s }",
             keys: %w(block_argument block_expression range_start range_end)
           },
           /\[(?<block_expression>.+?) for (?<block_argument>\w+) in (?<expression>.+)\]/ => {
-            code: "%<expression>s.each { |%<block_argument>s| %<block_expression>s }",
+            code: "%<expression>s.map { |%<block_argument>s| %<block_expression>s }",
             keys: %w(block_argument block_expression expression)
           },
           /list\(map\(lambda (?<block_argument>\w+): (?<block_expression>.+?), (?<expression>.+?)\)\)/ => {
@@ -214,7 +222,7 @@ private
   def massaged_source_code
     case source_language
     when "python3"
-      source_code.gsub(/:[ ]*\r?\n\s+/, ": ").tap { |s| puts s }
+      source_code.gsub(/:[ ]*\r?\n\s+/, ": ")
     else
       source_code
     end
