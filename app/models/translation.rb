@@ -55,6 +55,9 @@ class Translation
       },
       python3: {
         expressions: {
+          /nil/ => {
+            code: "None"
+          },
           /puts[ ](?<expression>.+)/ => {
             code: "print(%<expression>s)",
             keys: %w(expression)
@@ -109,9 +112,33 @@ class Translation
     python3: {
       ruby: {
         expressions: {
-          /print\((?<expression>.+?)\)/ => {
-            code: "puts %<expression>s",
+          /None/ => {
+            code: "nil",
             keys: %w(expression)
+          },
+          /\[var for var in (?<expression>.+) if var\]/ => {
+            code: "%<expression>s.compact",
+            keys: %w(expression)
+          },
+          /sum(?<expression>.+)/ => {
+            code: "%<expression>s.sum",
+            keys: %w(expression)
+          },
+          /print\((?<expression>.+?)\)/ => {
+            code: "puts\(%<expression>s\)",
+            keys: %w(expression)
+          },
+          /\[(?<block_expression>.+?) for (?<block_argument>\w+) in range\((?<range_start>\d+),[ ](?<range_end>\d+)\)\]/ => {
+            code: "\(%<range_start>s...%<range_end>s\).each { |%<block_argument>s| %<block_expression>s }",
+            keys: %w(block_argument block_expression range_start range_end)
+          },
+          /\[(?<block_expression>.+?) for (?<block_argument>\w+) in (?<expression>.+)\]/ => {
+            code: "%<expression>s.each { |%<block_argument>s| %<block_expression>s }",
+            keys: %w(block_argument block_expression expression)
+          },
+          /list\(map\(lambda (?<block_argument>\w+): (?<block_expression>.+?), (?<expression>.+?)\)\)/ => {
+            code: "%<expression>s.map { |%<block_argument>s| %<block_expression>s }",
+            keys: %w(block_argument block_expression expression)
           }
         }
       },
