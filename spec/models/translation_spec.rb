@@ -26,7 +26,12 @@ RSpec.describe Translation do
     {
       ruby: "[1, 2, 3].map { |number| number + 1 }",
       js: "[1, 2, 3].map((number) => number + 1);"
-    }
+    },
+    # TODO: JS -> RUBY not implemented
+    # {
+    #   ruby: "(1..100).each{ |i| puts([[\"Fizz\"][i % 3], [\"Buzz\"][i % 5]].compact.join.presence || i) }",
+    #   js: "for(let i = 1; i < 100; i++) { console.log([['Fizz'][i % 3], ['Buzz'][i % 5]].filter((item) => item != null).join() || i) };"
+    # }
   ].freeze
 
   subject do
@@ -37,7 +42,7 @@ RSpec.describe Translation do
     )
   end
 
-  describe "output_code" do
+  describe "destination_code" do
     context "from ruby to js" do
       let(:source_language) { "ruby" }
       let(:destination_language) { "js" }
@@ -45,10 +50,10 @@ RSpec.describe Translation do
       TEST_CASES.each do |test_data|
         context "given: #{test_data[:ruby]}" do
           let(:source_code) { test_data[:ruby] }
-          let(:output_code) { test_data[:js] }
+          let(:destination_code) { test_data[:js] }
 
           it "returns: #{test_data[:js]}" do
-            expect(subject.output_code).to eq(output_code)
+            expect(subject.destination_code).to eq(destination_code)
           end
         end
       end
@@ -61,10 +66,10 @@ RSpec.describe Translation do
       TEST_CASES.each do |test_data|
         context "given: #{test_data[:js]}" do
           let(:source_code) { test_data[:js] }
-          let(:output_code) { test_data[:ruby] }
+          let(:destination_code) { test_data[:ruby] }
 
           it "returns: #{test_data[:ruby]}" do
-            expect(subject.output_code).to eq(output_code)
+            expect(subject.destination_code).to eq(destination_code)
           end
         end
       end

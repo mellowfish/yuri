@@ -13,6 +13,18 @@ class Translation
             code: "%<expression>s.reduce((a, b) => a + b)",
             keys: %w(expression)
           },
+          /(?<expression>.+?)[.]compact/ => {
+            code: "%<expression>s.filter((item) => item != null)",
+            keys: %w(expression)
+          },
+          /(?<expression>.+?)[.](?<method_name>join)(?![(][)])/ => {
+            code: "%<expression>s.%<method_name>s()",
+            keys: %w(expression method_name)
+          },
+          /(?<expression>.+?)[.]presence/ => {
+            code: "%<expression>s",
+            keys: %w(expression)
+          },
           /puts[ ](?<expression>.+)/ => {
             code: "console.log(%<expression>s)",
             keys: %w(expression)
@@ -21,11 +33,15 @@ class Translation
             code: "console.log(%<expression>s)",
             keys: %w(expression)
           },
-          /(?<expression>.+?)[.]each { [|](?<block_argument>\w+)[|] (?<block_expression>.+?)[ ;]? }/ => {
+          /[(](?<range_start>\d+)[.][.](?<range_end>\d+)[)][.]each[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
+            code: "for(let %<block_argument>s = %<range_start>s; %<block_argument>s < %<range_end>s; %<block_argument>s++) { %<block_expression>s }",
+            keys: %w(range_start range_end block_argument block_expression)
+          },
+          /(?<expression>.+?)[.]each[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
             code: "%<expression>s.forEach((%<block_argument>s) => %<block_expression>s)",
             keys: %w(expression block_argument block_expression)
           },
-          /(?<expression>.+?)[.]map { [|](?<block_argument>\w+)[|] (?<block_expression>.+?)[ ;]? }/ => {
+          /(?<expression>.+?)[.]map[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
             code: "%<expression>s.map((%<block_argument>s) => %<block_expression>s)",
             keys: %w(expression block_argument block_expression)
           }
@@ -87,9 +103,10 @@ class Translation
   attr_accessor :source_code, :source_language, :destination_language
 
   def destination_code
-    source_code.to_s.split("\n").map do |input_line|
-      translate_line(input_line.strip)
-    end.join("\n")
+    @destination_code ||=
+      source_code.to_s.split("\n").map do |input_line|
+        translate_line(input_line.strip)
+      end.join("\n")
   end
 
   def source_output
@@ -104,6 +121,11 @@ private
 
   def get_output(language, code)
     file = Tempfile.new("code.txt")
+    case language
+    when "ruby"
+      file.write("require\"active_support\"\n")
+      file.write("require\"active_support/all\"\n")
+    end
     file.write(code)
     file.close
 
@@ -142,8 +164,13 @@ private
   def translate_line(line)
     line = line[0..-2] if line[-1] == ";"
     expression_mappings.each do |regex, mapping_data|
-      regex.match(line) do |match_data|
-        line[regex] = format(mapping_data[:code], match_data.named_captures.slice(*mapping_data[:keys]).symbolize_keys)
+      loop do
+        another_please = false
+        regex.match(line) do |match_data|
+          line[regex] = format(mapping_data[:code], match_data.named_captures.slice(*mapping_data[:keys]).symbolize_keys)
+          another_please = true
+        end
+        break unless another_please
       end
     end
 
