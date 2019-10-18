@@ -117,6 +117,36 @@ class Translation
       },
       js: {
         expressions: {
+          /"(?<string>[^"]+?)"/ => {
+            code: "'%<string>s'",
+            keys: %w(string)
+          },
+          /sum[(](?<expression>.+?)[)]/ => {
+            code: "%<expression>s.reduce((a, b) => a + b)",
+            keys: %w(expression)
+          },
+          /print[(](?<expression>.+?)[)]/ => {
+            code: "console.log(%<expression>s)",
+            keys: %w(expression)
+          },
+          /for[ ](?<block_argument>\w+)[ ]in[ ](?<expression>[^:]+?):\s+(?<block_expression>.+)/ => {
+            code: "%<expression>s.forEach((%<block_argument>s) => %<block_expression>s)",
+            keys: %w(expression block_argument block_expression)
+          },
+          /\[(?<block_expression>.+?)[ ]for[ ](?<block_argument>\w+)[ ]in\s*\[(?<expression>.+?)\]\s*\]/ => {
+            code: "[%<expression>s].map((%<block_argument>s) => %<block_expression>s)",
+            keys: %w(block_expression block_argument expression)
+          },
+          /\[(?<block_expression>.+?)[ ]for[ ](?<block_argument>\w+)[ ]in\s*(?<expression>.+?)\]/ => {
+            code: "%<expression>s.map((%<block_argument>s) => %<block_expression>s)",
+            keys: %w(block_expression block_argument expression)
+          },
+        },
+        lines: {
+          /^(?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
+            code: "var %<variable_name>s = %<expression>s",
+            keys: %w(variable_name expression)
+          }
         }
       }
     }
@@ -126,7 +156,7 @@ class Translation
 
   def destination_code
     @destination_code ||=
-      source_code.to_s.split("\n").map do |input_line|
+      massaged_source_code.to_s.split("\n").map do |input_line|
         translate_line(input_line.strip)
       end.join("\n")
   end
@@ -135,11 +165,24 @@ class Translation
     get_output(source_language, source_code)
   end
 
+  def formatted_destination_code
+    destination_code.gsub("\n", "<br>").html_safe
+  end
+
   def destination_output
     get_output(destination_language, destination_code)
   end
 
 private
+
+  def massaged_source_code
+    case source_language
+    when "python3"
+      source_code.gsub(/:[ ]*\r?\n\s+/, ": ").tap { |s| puts s }
+    else
+      source_code
+    end
+  end
 
   def get_output(language, code)
     file = Tempfile.new("code.txt")

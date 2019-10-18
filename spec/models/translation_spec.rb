@@ -5,23 +5,28 @@ RSpec.describe Translation do
   TEST_CASES = [
     {
       ruby: "1 + 1",
-      js: "1 + 1;"
+      js: "1 + 1;",
+      python3: "1 + 1"
     },
     {
       ruby: "puts \"hello world\"",
-      js: "console.log('hello world');"
+      js: "console.log('hello world');",
+      python3: "print(\"hello world\")"
     },
     {
       ruby: "[1, 2].sum",
-      js: "[1, 2].reduce((a, b) => a + b);"
+      js: "[1, 2].reduce((a, b) => a + b);",
+      python3: "sum([1, 2])"
     },
     {
       ruby: "a = 1 + 1",
-      js: "var a = 1 + 1;"
+      js: "var a = 1 + 1;",
+      python3: "a = 1 + 1"
     },
     {
       ruby: "[1, 2, 3].each { |number| puts number }",
-      js: "[1, 2, 3].forEach((number) => console.log(number));"
+      js: "[1, 2, 3].forEach((number) => console.log(number));",
+      python3: "for number in [1, 2, 3]:\n"
     },
     {
       ruby: "[1, 2, 3].map { |number| number + 1 }",
