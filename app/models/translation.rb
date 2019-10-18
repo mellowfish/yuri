@@ -62,7 +62,15 @@ class Translation
           /puts[(](?<expression>.+?)[)]/ => {
             code: "print(%<expression>s)",
             keys: %w(expression)
-          }
+          },
+          /\[(?<expression>.+?)\][.]sum/ => {
+            code: "sum([%<expression>s])",
+            keys: %w(expression)
+          },
+          /(?<expression>\w+?)[.]sum/ => {
+            code: "sum(%<expression>s)",
+            keys: %w(expression)
+          },
         }
       }
     },
