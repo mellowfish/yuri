@@ -116,12 +116,13 @@ class Translation
             code: "nil",
             keys: %w(expression)
           },
-          /\[var for var in (?<expression>.+) if var\]/ => {
-            code: "%<expression>s.compact",
-            keys: %w(expression)
-          },
           /sum(?<expression>.+)/ => {
             code: "%<expression>s.sum",
+            keys: %w(expression)
+          },
+          # compact
+          /\[var for var in (?<expression>.+) if var\]/ => {
+            code: "%<expression>s.compact",
             keys: %w(expression)
           },
           /print\((?<expression>.+?)\)/ => {
