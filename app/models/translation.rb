@@ -119,6 +119,36 @@ class Translation
             keys: %w(variable_name expression)
           }
         }
+      },
+      python3: {
+        expressions: {
+          /'(?<string>[^']+?)'/ => {
+            code: "\"%<string>s\"",
+            keys: %w(string)
+          },
+          /(?<expression>.+?)[.]reduce[(][(](?<a>\w+), (?<b>\w+)[)] => \k<a> [+] \k<b>[)]/ => {
+            code: "sum(%<expression>s)",
+            keys: %w(variable_name expression)
+          },
+          /console[.]log[(](?<expression>.+[(].+?[)]|.+?)[)]/ => {
+            code: "print(%<expression>s)",
+            keys: %w(expression)
+          },
+          /(?<expression>.+?)[.]forEach[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+[(].+?[)]|.+?)[)]/ => {
+            code: "for %<block_argument>s in %<expression>s:\n  %<block_expression>s",
+            keys: %w(expression block_argument block_expression)
+          },
+          /(?<expression>.+?)[.]map[(][(](?<block_argument>\w+)[)] => (?<block_expression>.+[(].+?[)]|.+?)[)]/ => {
+            code: "[%<block_expression>s for %<block_argument>s in %<expression>s]",
+            keys: %w(expression block_argument block_expression)
+          },
+        },
+        lines: {
+          /^var (?<variable_name>\w+)[ ]?=[ ]?(?<expression>.+)$/ => {
+            code: "%<variable_name>s = %<expression>s",
+            keys: %w(variable_name expression)
+          }
+        }
       }
     },
     python3: {

@@ -101,6 +101,22 @@ RSpec.describe Translation do
       end
     end
 
+    context "from js to python3" do
+      let(:source_language) { "js" }
+      let(:destination_language) { "python3" }
+
+      TEST_CASES.each do |test_data|
+        context "given: #{test_data[:js]}" do
+          let(:source_code) { test_data[:js] }
+          let(:destination_code) { test_data[:python3] }
+
+          it "returns: #{test_data[:python3]}" do
+            expect(subject.destination_code).to eq(destination_code)
+          end
+        end
+      end
+    end
+
     context "from python3 to js" do
       let(:source_language) { "python3" }
       let(:destination_language) { "js" }
