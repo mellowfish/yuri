@@ -78,6 +78,10 @@ class Translation
             code: "for %<block_argument>s in %<expression>s:\n  %<block_expression>s",
             keys: %w(expression block_argument block_expression)
           },
+          /\[(?<expression>.+?)[.]map[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
+            code: "[%<block_expression>s for %<block_argument>s in [%<expression>s]",
+            keys: %w(expression block_argument block_expression)
+          }
         }
       }
     },
