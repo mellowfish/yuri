@@ -34,7 +34,7 @@ class Translation
             keys: %w(expression)
           },
           /[(](?<range_start>\d+)[.][.](?<range_end>\d+)[)][.]each[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
-            code: "for(let %<block_argument>s = %<range_start>s; %<block_argument>s < %<range_end>s; %<block_argument>s++) { %<block_expression>s }",
+            code: "for(let %<block_argument>s = %<range_start>s; %<block_argument>s <= %<range_end>s; %<block_argument>s++) { %<block_expression>s }",
             keys: %w(range_start range_end block_argument block_expression)
           },
           /(?<expression>.+?)[.]each[ ]?{[ ]?[|](?<block_argument>\w+)[|][ ]?(?<block_expression>.+?)[ ;]? }/ => {
