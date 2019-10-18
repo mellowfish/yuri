@@ -26,11 +26,12 @@ RSpec.describe Translation do
     {
       ruby: "[1, 2, 3].each { |number| puts number }",
       js: "[1, 2, 3].forEach((number) => console.log(number));",
-      python3: "for number in [1, 2, 3]:\n"
+      python3: "for number in [1, 2, 3]:\npint(number)"
     },
     {
       ruby: "[1, 2, 3].map { |number| number + 1 }",
-      js: "[1, 2, 3].map((number) => number + 1);"
+      js: "[1, 2, 3].map((number) => number + 1);",
+      python3: "[number + 1 for number in [1, 2, 3]]"
     },
     # TODO: JS -> RUBY not implemented
     # {
@@ -74,6 +75,22 @@ RSpec.describe Translation do
           let(:destination_code) { test_data[:ruby] }
 
           it "returns: #{test_data[:ruby]}" do
+            expect(subject.destination_code).to eq(destination_code)
+          end
+        end
+      end
+    end
+
+    context "from python3 to js" do
+      let(:source_language) { "python3" }
+      let(:destination_language) { "js" }
+
+      TEST_CASES.each do |test_data|
+        context "given: #{test_data[:python3]}" do
+          let(:source_code) { test_data[:python3] }
+          let(:destination_code) { test_data[:js] }
+
+          it "returns: #{test_data[:js]}" do
             expect(subject.destination_code).to eq(destination_code)
           end
         end
