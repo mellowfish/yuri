@@ -97,6 +97,20 @@ class Translation
           }
         }
       }
+    },
+    python3: {
+      ruby: {
+        expressions: {
+          /print\((?<expression>.+?)\)/ => {
+            code: "puts %<expression>s",
+            keys: %w(expression)
+          }
+        }
+      },
+      js: {
+        expressions: {
+        }
+      }
     }
   }.freeze
 
