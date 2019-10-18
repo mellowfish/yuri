@@ -26,7 +26,7 @@ RSpec.describe Translation do
     {
       ruby: "[1, 2, 3].each { |number| puts number }",
       js: "[1, 2, 3].forEach((number) => console.log(number));",
-      python3: "for number in [1, 2, 3]:\npint(number)"
+      python3: "for number in [1, 2, 3]:\n  print(number)"
     },
     {
       ruby: "[1, 2, 3].map { |number| number + 1 }",
